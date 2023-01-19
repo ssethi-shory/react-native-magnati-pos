@@ -17,24 +17,14 @@ const MagnatiPosIntegrationLibrary = NativeModules.MagnatiPosIntegrationLibrary
       }
     );
 
-export function multiply(a: number, b: number): Promise<number> {
-  return MagnatiPosIntegrationLibrary.multiply(a, b);
-}
-
 export function initializePOS(
-  _options: IInitializeRequestOptions = {
-    transactionTimeout: 30,
-    uuid: '',
-    connectionTimeout: 120,
-    settlementTimeout: 300,
-    enableTrace: false,
-  }
+  _options: IInitializeRequestOptions
 ): Promise<number> {
   const {
-    transactionTimeout,
+    transactionTimeout = 30,
     uuid,
-    connectionTimeout,
-    settlementTimeout,
+    connectionTimeout = 120,
+    settlementTimeout = 300,
     enableTrace,
   } = _options;
   return MagnatiPosIntegrationLibrary.triggerPosInitialize(

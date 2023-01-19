@@ -39,14 +39,6 @@ public class MagnatiPosIntegrationLibraryModule extends ReactContextBaseJavaModu
     return NAME;
   }
 
-
-  // Example method
-  // See https://reactnative.dev/docs/native-modules-android
-  @ReactMethod
-  public void multiply(double a, double b, Promise promise) {
-    promise.resolve(a*b);
-  }
-
   @ReactMethod
   public void triggerPosInitialize(String uuid,  Integer connectionTimeout,Integer transactionTimeout, Integer settlementTimeout, boolean enableTrace, Promise promise) {
       VFIMembers var10000;

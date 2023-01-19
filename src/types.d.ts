@@ -1,8 +1,8 @@
 interface IInitializeRequestOptions {
   uuid: string;
-  connectionTimeout: number;
-  transactionTimeout: number;
-  settlementTimeout: number;
+  connectionTimeout?: number;
+  transactionTimeout?: number;
+  settlementTimeout?: number;
   enableTrace?: boolean;
 }
 interface IInitializeResponse {
