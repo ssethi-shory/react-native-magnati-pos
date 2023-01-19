@@ -83,6 +83,10 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  * This reads the value from reactNativeArchitectures in your gradle.properties
  * file and works together with the --active-arch-only flag of react-native run-android.
  */
+
+ def useIntlJsc = false
+
+
 def reactNativeArchitectures() {
     def value = project.getProperties().get("reactNativeArchitectures")
     return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
@@ -165,6 +169,12 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    if (useIntlJsc) {
+     implementation 'org.webkit:android-jsc-intl:+'
+} else {
+     implementation 'org.webkit:android-jsc:+'
+}
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
