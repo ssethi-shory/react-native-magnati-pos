@@ -17,9 +17,9 @@ const MagnatiPosIntegrationLibrary = NativeModules.MagnatiPosIntegrationLibrary
       }
     );
 
-export function initializePOS(
-  _options: IInitializeRequestOptions
-): Promise<number> {
+export const initializePOS = (
+  _options: IInitializeRequest
+): Promise<IMagnatiResponse> => {
   const {
     transactionTimeout = 30,
     uuid,
@@ -34,4 +34,17 @@ export function initializePOS(
     settlementTimeout,
     enableTrace
   );
-}
+};
+
+export const startTransactionMode = (): Promise<IMagnatiResponse> =>
+  MagnatiPosIntegrationLibrary.startTransactionMode();
+
+export const stopTransactionMode = (): Promise<IMagnatiResponse> =>
+  MagnatiPosIntegrationLibrary.stopTransactionMode();
+
+export const initializePayment = async (
+  amount: number,
+  tid: string,
+  receiptNumber: string
+): Promise<IMagnatiAuthResponse> =>
+  MagnatiPosIntegrationLibrary.getAuthorization(amount, tid, receiptNumber);
