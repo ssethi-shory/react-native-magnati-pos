@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "react-native-magnati-pos-integration-library": ["./src/index"]
+      "react-native-magnati-pos": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
