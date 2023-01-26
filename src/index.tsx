@@ -48,3 +48,6 @@ export const initializePayment = async (
   receiptNumber: string
 ): Promise<IMagnatiAuthResponse> =>
   MagnatiPosIntegrationLibrary.getAuthorization(amount, tid, receiptNumber);
+
+export const getTID_MID = async (): Promise<IMagnatiAuthResponse> =>
+  MagnatiPosIntegrationLibrary.getTIDMID();

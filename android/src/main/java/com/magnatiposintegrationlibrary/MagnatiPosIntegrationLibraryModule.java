@@ -127,6 +127,7 @@ public class MagnatiPosIntegrationLibraryModule extends ReactContextBaseJavaModu
       data.putString("VFI_ECRNO", VFIMembers.getVFI_ECRNO());
       data.putString("VFI_TXNAMT", VFIMembers.getVFI_TXNAMT());
       data.putString("VFI_Expiry", VFIMembers.getVFI_Expiry());
+      data.putString("VFI_CardNumber", VFIMembers.getVFI_CardNumber());
       data.putString("VFI_CHName", VFIMembers.getVFI_CHName());
       data.putString("VFI_MESSNO", VFIMembers.getVFI_MESSNO());
       data.putString("VFI_TransSource", VFIMembers.getVFI_TransSource());
@@ -183,6 +184,30 @@ public class MagnatiPosIntegrationLibraryModule extends ReactContextBaseJavaModu
       map.putString("message", VFIMembers.getVFI_ReponseMessage());
       map.putString("code", VFIMembers.getVFI_ResponseCode());
       resetResponse();
+      promise.resolve(map);
+    } catch (Exception ex) {
+      WritableMap map = Arguments.createMap();
+      map.putBoolean("success", false);
+      map.putString("message", ex.toString());
+      map.putString("code", "XXXXX");
+      promise.resolve(map);
+    }
+  }
+
+  @ReactMethod
+  public void getTIDMID(Promise promise) {
+    VFIMembers var10000;
+    String pLicense = "";
+    Activity pActivity = getCurrentActivity();
+    Log.d("POS_GetTIDMID...","");
+    try {
+      var10000 = objVFIMembers;
+      boolean isGetTIDMIDCompleted = e285Interface.VFI_GetMIDTID(getCurrentActivity());
+      Log.d("POS_POS_GetTIDMID completed...", " " + isGetTIDMIDCompleted);
+      WritableMap map = Arguments.createMap();
+      map.putBoolean("success", isGetTIDMIDCompleted);
+      map.putString("message", VFIMembers.getVFI_ReponseMessage());
+      map.putString("code", VFIMembers.getVFI_ResponseCode());
       promise.resolve(map);
     } catch (Exception ex) {
       WritableMap map = Arguments.createMap();

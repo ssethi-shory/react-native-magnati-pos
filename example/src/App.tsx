@@ -15,6 +15,7 @@ import {
   startTransactionMode,
   stopTransactionMode,
   initializePayment,
+  getTID_MID,
 } from 'react-native-magnati-pos';
 
 const App = () => {
@@ -61,44 +62,49 @@ const App = () => {
       console.warn(err);
     }
   };
+  const getTidMid = () => {
+    getTID_MID()
+      .then((res: any) => console.log(res))
+      .catch((ex: any) => console.log(ex));
+  };
   const allSteps = () => {
     let transactionAmount = Number(amount);
     if (transactionAmount > 1) {
-    console.log('starting');
-    setLoading(true);
-    startTransactionMode()
-      .then((startRes) => {
-        console.log('starting res', startRes);
-        if (startRes.success) {
-          setTimeout(() => {
-            console.log('initialize');
+      console.log('starting');
+      setLoading(true);
+      startTransactionMode()
+        .then((startRes) => {
+          console.log('starting res', startRes);
+          if (startRes.success) {
+            setTimeout(() => {
+              console.log('initialize');
               initializePayment(transactionAmount * 100, '00283933', '1234')
-              .then((res: IMagnatiAuthResponse) => {
-                console.log('initialize res', res);
-                if (!res.success)
-                  Alert.alert(`Error - ${res?.code} - ${res?.message}`);
-                else Alert.alert(`Success - ${res?.code} - ${res?.message}`);
-                console.log(res?.data);
-              })
-              .catch((ex) => console.log(ex))
-              .finally(() => {
-                setLoading(false);
-                stopTransactionMode()
-                  .then((stopRes) => console.log(stopRes))
-                  .catch((ex) => console.log(ex))
-                  .finally(() => {
-                    setLoading(false);
-                  });
-              });
-          }, 20000);
-        } else {
+                .then((res: IMagnatiAuthResponse) => {
+                  console.log('initialize res', res);
+                  if (!res.success)
+                    Alert.alert(`Error - ${res?.code} - ${res?.message}`);
+                  else Alert.alert(`Success - ${res?.code} - ${res?.message}`);
+                  console.log(res?.data);
+                })
+                .catch((ex) => console.log(ex))
+                .finally(() => {
+                  setLoading(false);
+                  stopTransactionMode()
+                    .then((stopRes) => console.log(stopRes))
+                    .catch((ex) => console.log(ex))
+                    .finally(() => {
+                      setLoading(false);
+                    });
+                });
+            }, 20000);
+          } else {
+            setLoading(false);
+          }
+        })
+        .catch((ex) => {
           setLoading(false);
-        }
-      })
-      .catch((ex) => {
-        setLoading(false);
-        console.log(ex);
-      });
+          console.log(ex);
+        });
     } else {
       Alert.alert(`Error - Amount should be greater than 1`);
     }
@@ -114,6 +120,7 @@ const App = () => {
         keyboardType="numeric"
       />
       <Button disabled={isLoading} title="All Steps" onPress={allSteps} />
+      <Button title="GET TID MID" onPress={getTidMid} />
     </View>
   );
 };
