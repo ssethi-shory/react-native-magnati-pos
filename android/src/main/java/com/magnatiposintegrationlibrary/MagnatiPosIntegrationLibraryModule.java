@@ -204,10 +204,18 @@ public class MagnatiPosIntegrationLibraryModule extends ReactContextBaseJavaModu
       var10000 = objVFIMembers;
       boolean isGetTIDMIDCompleted = e285Interface.VFI_GetMIDTID(getCurrentActivity());
       Log.d("POS_POS_GetTIDMID completed...", " " + isGetTIDMIDCompleted);
+      
       WritableMap map = Arguments.createMap();
       map.putBoolean("success", isGetTIDMIDCompleted);
       map.putString("message", VFIMembers.getVFI_ReponseMessage());
       map.putString("code", VFIMembers.getVFI_ResponseCode());
+
+      WritableMap data = Arguments.createMap();
+
+      data.putString("VFI_TID", VFIMembers.getVFI_TID());
+      data.putString("VFI_Mid", VFIMembers.getVFI_Mid());
+      map.putMap("data", data);
+      resetResponse();
       promise.resolve(map);
     } catch (Exception ex) {
       WritableMap map = Arguments.createMap();

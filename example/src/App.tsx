@@ -63,9 +63,25 @@ const App = () => {
     }
   };
   const getTidMid = () => {
-    getTID_MID()
-      .then((res: any) => console.log(res))
-      .catch((ex: any) => console.log(ex));
+    startTransactionMode()
+      .then((startRes) => {
+        console.log('starting res', startRes);
+        if (startRes.success) {
+          setTimeout(() => {
+            getTID_MID()
+              .then((res: any) => console.log(res))
+              .catch((ex: any) => console.log(ex))
+              .finally(() => {
+                stopTransactionMode()
+                  .then((stopRes) => console.log(stopRes))
+                  .catch((ex) => console.log(ex));
+              });
+          }, 3000);
+        }
+      })
+      .catch((ex) => {
+        console.log(ex);
+      });
   };
   const allSteps = () => {
     let transactionAmount = Number(amount);
