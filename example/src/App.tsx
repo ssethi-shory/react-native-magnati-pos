@@ -68,7 +68,7 @@ const App = () => {
         console.log('starting res', startRes);
         if (startRes.success) {
           setTimeout(() => {
-            getTID_MID()
+            getTID_MID(100)
               .then((res: any) => console.log(res))
               .catch((ex: any) => console.log(ex))
               .finally(() => {
@@ -76,7 +76,7 @@ const App = () => {
                   .then((stopRes) => console.log(stopRes))
                   .catch((ex) => console.log(ex));
               });
-          }, 3000);
+          }, 4000);
         }
       })
       .catch((ex) => {
@@ -94,7 +94,7 @@ const App = () => {
           if (startRes.success) {
             setTimeout(() => {
               console.log('initialize');
-              initializePayment(transactionAmount * 100, '00283933', '1234')
+              initializePayment(transactionAmount * 100, '00283933', '1234', 60)
                 .then((res: IMagnatiAuthResponse) => {
                   console.log('initialize res', res);
                   if (!res.success)
@@ -112,7 +112,7 @@ const App = () => {
                       setLoading(false);
                     });
                 });
-            }, 20000);
+            }, 4000);
           } else {
             setLoading(false);
           }

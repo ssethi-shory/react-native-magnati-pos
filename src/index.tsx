@@ -45,9 +45,17 @@ export const stopTransactionMode = (): Promise<IMagnatiResponse> =>
 export const initializePayment = async (
   amount: number,
   tid: string,
-  receiptNumber: string
+  receiptNumber: string,
+  timeoutInSec: number = 30
 ): Promise<IMagnatiAuthResponse> =>
-  MagnatiPosIntegrationLibrary.getAuthorization(amount, tid, receiptNumber);
+  MagnatiPosIntegrationLibrary.getAuthorization(
+    amount,
+    tid,
+    receiptNumber,
+    timeoutInSec
+  );
 
-export const getTID_MID = async (): Promise<IMagnatiAuthResponse> =>
-  MagnatiPosIntegrationLibrary.getTIDMID();
+export const getTID_MID = async (
+  timeoutInSec: number = 30
+): Promise<IMagnatiAuthResponse> =>
+  MagnatiPosIntegrationLibrary.getTIDMID(timeoutInSec);
