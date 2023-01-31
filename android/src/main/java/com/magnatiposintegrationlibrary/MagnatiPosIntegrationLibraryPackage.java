@@ -10,13 +10,16 @@ import com.facebook.react.uimanager.ViewManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.*;
 
 public class MagnatiPosIntegrationLibraryPackage implements ReactPackage {
+      ExecutorService executorService = Executors.newFixedThreadPool(4);
+
   @NonNull
   @Override
   public List<NativeModule> createNativeModules(@NonNull ReactApplicationContext reactContext) {
     List<NativeModule> modules = new ArrayList<>();
-    modules.add(new MagnatiPosIntegrationLibraryModule(reactContext));
+    modules.add(new MagnatiPosIntegrationLibraryModule(reactContext,executorService));
     return modules;
   }
 

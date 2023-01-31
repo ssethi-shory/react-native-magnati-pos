@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useEffect, useState } from 'react';
 import { Platform, TextInput } from 'react-native';
 
@@ -21,7 +21,8 @@ import {
 const App = () => {
   const [isLoading, setLoading] = useState(false);
   const [amount, setAmount] = useState('');
-  useEffect(() => {
+
+  const initialize = useCallback(() => {
     setLoading(true);
     requestBluetoothPermission();
     initializePOS({
@@ -37,6 +38,10 @@ const App = () => {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
 
   const requestBluetoothPermission = async () => {
     try {
@@ -68,13 +73,15 @@ const App = () => {
         console.log('starting res', startRes);
         if (startRes.success) {
           setTimeout(() => {
-            getTID_MID(100)
+            console.log('getting tid');
+            getTID_MID(20)
               .then((res: any) => console.log(res))
-              .catch((ex: any) => console.log(ex))
+              .catch((ex) => console.log(ex))
               .finally(() => {
+                console.log('getting tid ended');
                 stopTransactionMode()
                   .then((stopRes) => console.log(stopRes))
-                  .catch((ex) => console.log(ex));
+                  .catch((ex) => console.log('in ex', ex));
               });
           }, 4000);
         }
@@ -125,6 +132,12 @@ const App = () => {
       Alert.alert(`Error - Amount should be greater than 1`);
     }
   };
+
+  const stop = () => {
+    stopTransactionMode()
+      .then((stopRes) => console.log(stopRes))
+      .catch((ex) => console.log(ex));
+  };
   return (
     <View style={styles.container}>
       {isLoading && <Text>Loading... </Text>}
@@ -137,6 +150,14 @@ const App = () => {
       />
       <Button disabled={isLoading} title="All Steps" onPress={allSteps} />
       <Button title="GET TID MID" onPress={getTidMid} />
+      <Button title="Stop" onPress={stop} />
+      <Button title="Reinitialize" onPress={initialize} />
+      <Button
+        title="Alert"
+        onPress={() => {
+          Alert.alert('hey');
+        }}
+      />
     </View>
   );
 };
