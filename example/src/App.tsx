@@ -18,25 +18,26 @@ import {
   getTID_MID,
 } from 'react-native-magnati-pos';
 
+const sleep = (timeInSec: number) => {
+  return new Promise((r) => setTimeout(r, timeInSec * 1000));
+};
 const App = () => {
   const [isLoading, setLoading] = useState(false);
   const [amount, setAmount] = useState('');
 
-  const initialize = useCallback(() => {
+  const initialize = useCallback(async () => {
     setLoading(true);
     requestBluetoothPermission();
-    initializePOS({
-      transactionTimeout: 120,
+    requestWritePermission();
+    const initRes = await initializePOS({
+      transactionTimeout: 90,
       uuid: '00001101-0000-1000-8000-00805F9B34FB',
       connectionTimeout: 30,
       settlementTimeout: 300,
-      enableTrace: false,
-    })
-      .then((res: any) => console.log(res))
-      .catch((ex: any) => console.log(ex))
-      .finally(() => {
-        setLoading(false);
-      });
+      enableTrace: true,
+    });
+    console.log(initRes);
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -67,67 +68,76 @@ const App = () => {
       console.warn(err);
     }
   };
-  const getTidMid = () => {
-    startTransactionMode()
-      .then((startRes) => {
-        console.log('starting res', startRes);
-        if (startRes.success) {
-          setTimeout(() => {
-            console.log('getting tid');
-            getTID_MID(20)
-              .then((res: any) => console.log(res))
-              .catch((ex) => console.log(ex))
-              .finally(() => {
-                console.log('getting tid ended');
-                stopTransactionMode()
-                  .then((stopRes) => console.log(stopRes))
-                  .catch((ex) => console.log('in ex', ex));
-              });
-          }, 4000);
+
+  const requestWritePermission = async () => {
+    try {
+      if (Platform.OS === 'android') {
+        const granted = await PermissionsAndroid.request(
+          //@ts-ignore
+          'android.permission.WRITE_EXTERNAL_STORAGE',
+          {
+            title: 'Connect to External storage ',
+            message: '',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          }
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('External storage enabled');
+        } else {
+          console.log('External storage permission denied');
         }
-      })
-      .catch((ex) => {
-        console.log(ex);
-      });
+      }
+    } catch (err) {
+      console.warn(err);
+    }
   };
-  const allSteps = () => {
+  const getTidMid = async () => {
+    const startRes = await startTransactionMode();
+    console.log('starting res', startRes);
+    if (startRes.success) {
+      await sleep(4);
+      console.log('getting tid');
+      const getTidResponse = await getTID_MID(10);
+      console.log(getTidResponse);
+    }
+    const stopRes = await stopTransactionMode();
+    console.log(stopRes);
+  };
+
+  const allSteps = async () => {
     let transactionAmount = Number(amount);
     if (transactionAmount > 1) {
-      console.log('starting');
       setLoading(true);
-      startTransactionMode()
-        .then((startRes) => {
-          console.log('starting res', startRes);
-          if (startRes.success) {
-            setTimeout(() => {
-              console.log('initialize');
-              initializePayment(transactionAmount * 100, '00283933', '1234', 60)
-                .then((res: IMagnatiAuthResponse) => {
-                  console.log('initialize res', res);
-                  if (!res.success)
-                    Alert.alert(`Error - ${res?.code} - ${res?.message}`);
-                  else Alert.alert(`Success - ${res?.code} - ${res?.message}`);
-                  console.log(res?.data);
-                })
-                .catch((ex) => console.log(ex))
-                .finally(() => {
-                  setLoading(false);
-                  stopTransactionMode()
-                    .then((stopRes) => console.log(stopRes))
-                    .catch((ex) => console.log(ex))
-                    .finally(() => {
-                      setLoading(false);
-                    });
-                });
-            }, 4000);
-          } else {
-            setLoading(false);
-          }
-        })
-        .catch((ex) => {
-          setLoading(false);
-          console.log(ex);
-        });
+      const startRes = await startTransactionMode();
+      console.log('starting res', startRes);
+      if (startRes.success) {
+        await sleep(4);
+        console.log('triggering payment');
+        const initializePaymentResponse = await initializePayment(
+          transactionAmount * 100,
+          '00283933',
+          '1234',
+          60
+        );
+        console.log('payment res', initializePaymentResponse);
+        if (!initializePaymentResponse.success)
+          Alert.alert(
+            `Error - ${initializePaymentResponse?.code} - ${initializePaymentResponse?.message}`
+          );
+        else
+          Alert.alert(
+            `Success - ${initializePaymentResponse?.code} - ${initializePaymentResponse?.message}`
+          );
+        console.log(initializePaymentResponse?.data);
+        setLoading(false);
+        await sleep(1);
+        const stopRes = await stopTransactionMode();
+        console.log(stopRes);
+      } else {
+        setLoading(false);
+      }
     } else {
       Alert.alert(`Error - Amount should be greater than 1`);
     }

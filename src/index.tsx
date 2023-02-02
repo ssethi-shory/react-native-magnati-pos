@@ -27,103 +27,35 @@ export const initializePOS = (
     settlementTimeout = 300,
     enableTrace,
   } = _options;
-
-  const promise = new Promise((resolve) => {
-    try {
-      MagnatiPosIntegrationLibrary.triggerPosInitialize(
-        uuid,
-        connectionTimeout,
-        transactionTimeout,
-        settlementTimeout,
-        enableTrace,
-        (errorRes: any) => resolve(errorRes),
-        (res: unknown) => resolve(res)
-      );
-    } catch (ex) {
-      console.log('ex in magnati library', ex);
-    }
-  });
-
-  return promise;
+  return MagnatiPosIntegrationLibrary.triggerPosInitialize(
+    uuid,
+    connectionTimeout,
+    transactionTimeout,
+    settlementTimeout,
+    enableTrace
+  );
 };
 
-export const startTransactionMode = (): Promise<any | unknown> => {
-  const promise = new Promise((resolve) => {
-    try {
-      MagnatiPosIntegrationLibrary.startTransactionMode(
-        (errorRes: any) => resolve(errorRes),
-        (res: unknown) => resolve(res)
-      );
-    } catch (ex) {
-      console.log('ex in magnati library', ex);
-    }
-  });
+export const startTransactionMode = (): Promise<any | unknown> =>
+  MagnatiPosIntegrationLibrary.startTransactionMode();
 
-  return promise;
-};
-
-export const stopTransactionMode = (): Promise<any | unknown> => {
-  const promise = new Promise((resolve) => {
-    try {
-      MagnatiPosIntegrationLibrary.stopTransactionMode(
-        (errorRes: any) => resolve(errorRes),
-        (res: unknown) => resolve(res)
-      );
-    } catch (ex) {
-      console.log('ex in magnati library', ex);
-    }
-  });
-
-  return promise;
-};
+export const stopTransactionMode = (): Promise<any | unknown> =>
+  MagnatiPosIntegrationLibrary.stopTransactionMode();
 
 export const initializePayment = async (
   amount: number,
   tid: string,
   receiptNumber: string,
   timeoutInSec: number = 30
-): Promise<any | unknown> => {
-  const promise = new Promise((resolve) => {
-    try {
-      MagnatiPosIntegrationLibrary.getAuthorization(
-        amount,
-        tid,
-        receiptNumber,
-        timeoutInSec,
-        (errorRes: any) => {
-          resolve(errorRes);
-        },
-        (res: any) => {
-          resolve(res);
-        }
-      );
-    } catch (ex) {
-      console.log('ex in magnati library', ex);
-    }
-  });
-
-  return promise;
-};
+): Promise<any | unknown> =>
+  MagnatiPosIntegrationLibrary.getAuthorization(
+    amount,
+    tid,
+    receiptNumber,
+    timeoutInSec
+  );
 
 export const getTID_MID = async (
   timeoutInSec: number = 30
-): Promise<any | unknown> => {
-  const promise = new Promise((resolve) => {
-    try {
-      MagnatiPosIntegrationLibrary.getTIDMID(
-        timeoutInSec,
-        (errorRes: any) => {
-          console.log('in errorRes');
-          resolve(errorRes);
-        },
-        (res: any) => {
-          resolve(res);
-        }
-      );
-    } catch (ex) {
-      console.log('ex in magnati library', ex);
-    }
-  });
-
-  return promise;
-};
+): Promise<any | unknown> =>
+  MagnatiPosIntegrationLibrary.getTIDMID(timeoutInSec);

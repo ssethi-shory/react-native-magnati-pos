@@ -11,15 +11,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.logging.Logger;
 
 public class MagnatiPosIntegrationLibraryPackage implements ReactPackage {
-      ExecutorService executorService = Executors.newFixedThreadPool(4);
+  ExecutorService executorService = Executors.newFixedThreadPool(10);
 
   @NonNull
   @Override
   public List<NativeModule> createNativeModules(@NonNull ReactApplicationContext reactContext) {
     List<NativeModule> modules = new ArrayList<>();
-    modules.add(new MagnatiPosIntegrationLibraryModule(reactContext,executorService));
+    modules.add(new MagnatiPosIntegrationLibraryModule(reactContext, executorService));
     return modules;
   }
 
