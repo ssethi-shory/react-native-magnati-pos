@@ -71,6 +71,9 @@ public class PosGetAuthTask implements Callable<Response> {
     data.putString("VFI_QRVoucherNo", VFIMembers.getVFI_QRVoucherNo());
     data.putString("VFI_PayByMerchantOrderNo", VFIMembers.getVFI_PayByMerchantOrderNo());
     data.putString("VFI_PayByOrderNo", VFIMembers.getVFI_PayByOrderNo());
+    data.putString("VFI_DeviceSerialNo", VFIMembers.getVFI_DeviceSerialNo());
+    data.putString("VFI_DateTime", VFIMembers.getVFI_DateTime());
+    data.putString("VFI_CardSchemeName", VFIMembers.getVFI_CardSchemeName());
     return new Response(isAuthCompleted, VFIMembers.getVFI_ResponseCode(), VFIMembers.getVFI_ReponseMessage(), data);
   }
 
