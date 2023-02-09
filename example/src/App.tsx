@@ -30,11 +30,11 @@ const App = () => {
     requestBluetoothPermission();
     requestWritePermission();
     const initRes = await initializePOS({
-      transactionTimeout: 90,
+      transactionTimeout: 30,
       uuid: '00001101-0000-1000-8000-00805F9B34FB',
-      connectionTimeout: 30,
+      connectionTimeout: 10,
       settlementTimeout: 300,
-      enableTrace: true,
+      enableTrace: false,
     });
     console.log(initRes);
     setLoading(false);
@@ -95,46 +95,37 @@ const App = () => {
   };
   const getTidMid = async () => {
     const startRes = await startTransactionMode();
-    console.log('starting res', startRes);
     if (startRes.success) {
-      await sleep(4);
-      console.log('getting tid');
-      const getTidResponse = await getTID_MID(10);
+      await sleep(10);
+      const getTidResponse = await getTID_MID(120);
       console.log(getTidResponse);
     }
-    const stopRes = await stopTransactionMode();
-    console.log(stopRes);
+    await sleep(10);
+    await stopTransactionMode();
   };
 
-  const allSteps = async () => {
+  const triggerPayment = async () => {
     let transactionAmount = Number(amount);
     if (transactionAmount > 1) {
       setLoading(true);
       const startRes = await startTransactionMode();
-      console.log('starting res', startRes);
       if (startRes.success) {
-        await sleep(4);
-        console.log('triggering payment');
-        const initializePaymentResponse = await initializePayment(
+        await sleep(10);
+        const paymentResponse = await initializePayment(
           transactionAmount * 100,
           '00283933',
           '1234',
-          60
+          120
         );
-        console.log('payment res', initializePaymentResponse);
-        if (!initializePaymentResponse.success)
-          Alert.alert(
-            `Error - ${initializePaymentResponse?.code} - ${initializePaymentResponse?.message}`
-          );
-        else
-          Alert.alert(
-            `Success - ${initializePaymentResponse?.code} - ${initializePaymentResponse?.message}`
-          );
-        console.log(initializePaymentResponse?.data);
+        Alert.alert(
+          `${paymentResponse.success ? 'Success' : 'Error'} - ${
+            paymentResponse?.code
+          } - ${paymentResponse?.message}`
+        );
+        console.log(paymentResponse?.data);
         setLoading(false);
-        await sleep(1);
-        const stopRes = await stopTransactionMode();
-        console.log(stopRes);
+        await sleep(10);
+        await stopTransactionMode();
       } else {
         setLoading(false);
       }
@@ -143,11 +134,6 @@ const App = () => {
     }
   };
 
-  const stop = () => {
-    stopTransactionMode()
-      .then((stopRes) => console.log(stopRes))
-      .catch((ex) => console.log(ex));
-  };
   return (
     <View style={styles.container}>
       {isLoading && <Text>Loading... </Text>}
@@ -155,19 +141,16 @@ const App = () => {
         value={amount}
         style={styles.input}
         onChangeText={setAmount}
-        placeholder="useless placeholder"
+        placeholder="Enter the amount"
         keyboardType="numeric"
       />
-      <Button disabled={isLoading} title="All Steps" onPress={allSteps} />
-      <Button title="GET TID MID" onPress={getTidMid} />
-      <Button title="Stop" onPress={stop} />
-      <Button title="Reinitialize" onPress={initialize} />
       <Button
-        title="Alert"
-        onPress={() => {
-          Alert.alert('hey');
-        }}
+        disabled={isLoading}
+        title="Trigger Payment"
+        onPress={triggerPayment}
       />
+      <Button title="GET TID MID" onPress={getTidMid} />
+      <Button title="Initialize" onPress={initialize} />
     </View>
   );
 };
