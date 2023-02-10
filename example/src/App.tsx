@@ -94,13 +94,17 @@ const App = () => {
     }
   };
   const getTidMid = async () => {
+    console.log('Start');
     const startRes = await startTransactionMode();
     if (startRes.success) {
       await sleep(10);
+      console.log('Get tid');
       const getTidResponse = await getTID_MID(120);
       console.log(getTidResponse);
     }
     await sleep(10);
+    console.log('Stop');
+
     await stopTransactionMode();
   };
 
@@ -108,9 +112,11 @@ const App = () => {
     let transactionAmount = Number(amount);
     if (transactionAmount > 1) {
       setLoading(true);
+      console.log('Start');
       const startRes = await startTransactionMode();
       if (startRes.success) {
         await sleep(10);
+        console.log('Get transaction');
         const paymentResponse = await initializePayment(
           transactionAmount * 100,
           '00283933',
@@ -125,6 +131,7 @@ const App = () => {
         console.log(paymentResponse?.data);
         setLoading(false);
         await sleep(10);
+        console.log('Stop');
         await stopTransactionMode();
       } else {
         setLoading(false);
