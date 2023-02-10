@@ -54,8 +54,6 @@ class PosGetTidMidExecutor implements Runnable {
         Log.i("POS_GetTIDMID info is service terminated in finally", singleThreadExecutor.isTerminated() + "");
         handler.cancel(true);
         Log.i("POS_GetTIDMID serice shutdown finished in finally", "");
-        Thread.sleep(1000);
-        e285Interface.VFI_StopTransctionMode(currentActivity);
       } catch (InterruptedException ex) {
         ex.printStackTrace();
         Log.d("POS_GetTIDMID serice shutdown error closing error", ex.toString());

@@ -60,8 +60,6 @@ class PosGetAuthExecutor implements Runnable {
         Log.i("POS_GetAuth info is service terminated in finally", singleThreadExecutor.isTerminated() + "");
         handler.cancel(true);
         Log.i("POS_GetAuth serice shutdown finished in finally", "");
-        Thread.sleep(1000);
-        e285Interface.VFI_StopTransctionMode(currentActivity);
       } catch (InterruptedException ex) {
         ex.printStackTrace();
         Log.d("POS_GetAuth serice shutdown error closing error", ex.toString());
