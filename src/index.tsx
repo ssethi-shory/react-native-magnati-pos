@@ -1,5 +1,9 @@
 import { NativeModules, Platform } from 'react-native';
-import type { IInitializeRequest, IMagnatiAuthResponse, IMagnatiResponse } from './typings';
+import type {
+  IInitializeRequest,
+  IMagnatiAuthResponse,
+  IMagnatiResponse,
+} from './typings';
 
 const LINKING_ERROR =
   `The package 'react-native-magnati-pos' doesn't seem to be linked. Make sure: \n\n` +
