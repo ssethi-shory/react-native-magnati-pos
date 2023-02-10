@@ -1,4 +1,9 @@
 import { NativeModules, Platform } from 'react-native';
+import type {
+  IInitializeRequest,
+  IMagnatiAuthResponse,
+  IMagnatiResponse,
+} from './typings';
 
 const LINKING_ERROR =
   `The package 'react-native-magnati-pos' doesn't seem to be linked. Make sure: \n\n` +
@@ -19,7 +24,7 @@ const MagnatiPosIntegrationLibrary = NativeModules.MagnatiPosIntegrationLibrary
 
 export const initializePOS = (
   _options: IInitializeRequest
-): Promise<any | unknown> => {
+): Promise<IMagnatiResponse> => {
   const {
     transactionTimeout = 30,
     uuid,
@@ -36,10 +41,10 @@ export const initializePOS = (
   );
 };
 
-export const startTransactionMode = (): Promise<any | unknown> =>
+export const startTransactionMode = (): Promise<IMagnatiResponse> =>
   MagnatiPosIntegrationLibrary.startTransactionMode();
 
-export const stopTransactionMode = (): Promise<any | unknown> =>
+export const stopTransactionMode = (): Promise<IMagnatiResponse> =>
   MagnatiPosIntegrationLibrary.stopTransactionMode();
 
 export const initializePayment = async (
@@ -47,7 +52,7 @@ export const initializePayment = async (
   tid: string,
   receiptNumber: string,
   timeoutInSec: number = 30
-): Promise<any | unknown> =>
+): Promise<IMagnatiAuthResponse> =>
   MagnatiPosIntegrationLibrary.getAuthorization(
     amount,
     tid,
@@ -57,5 +62,5 @@ export const initializePayment = async (
 
 export const getTID_MID = async (
   timeoutInSec: number = 30
-): Promise<any | unknown> =>
+): Promise<IMagnatiResponse> =>
   MagnatiPosIntegrationLibrary.getTIDMID(timeoutInSec);

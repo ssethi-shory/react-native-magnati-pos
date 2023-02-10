@@ -1,17 +1,17 @@
-type IInitializeRequest = {
+export interface IInitializeRequest {
   uuid: string;
   connectionTimeout?: number;
   transactionTimeout?: number;
   settlementTimeout?: number;
   enableTrace?: boolean;
-};
+}
 
-type IMagnatiResponse = {
+export interface IMagnatiResponse {
   code: string;
   message: string;
   success: boolean;
-};
-type IMagnatiAuthResponseData = {
+}
+export interface IMagnatiAuthResponseData {
   VFI_AdditionalInfo: string;
   VFI_ApprovalCode: string;
   VFI_AuthMode: string;
@@ -47,17 +47,17 @@ type IMagnatiAuthResponseData = {
   VFI_TransSource: string;
   VFI_TXNAMT: string;
   VFI_TXNTYPE: string;
-};
+}
 
-type IMagnatiAuthResponse = {
+export interface IMagnatiAuthResponse {
   data: IMagnatiAuthResponseData | {};
   code: string;
   message: string;
   success: boolean;
-};
+}
 
-type IInitializePaymentRequest = {
+export interface IInitializePaymentRequest {
   amount: number;
   tid: string;
   receiptNo: string;
-};
+}
