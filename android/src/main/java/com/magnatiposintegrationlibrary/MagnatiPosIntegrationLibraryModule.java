@@ -10,7 +10,6 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.module.annotations.ReactModule;
 
-
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 
@@ -34,8 +33,10 @@ public class MagnatiPosIntegrationLibraryModule extends ReactContextBaseJavaModu
   }
 
   @ReactMethod
-  public void triggerPosInitialize(String uuid, Integer connectionTimeout, Integer transactionTimeout, Integer settlementTimeout, boolean enableTrace, Promise promise) {
-    executor.execute(new TaskPOSInitialize(uuid, connectionTimeout, transactionTimeout, settlementTimeout, enableTrace, getCurrentActivity(), promise));
+  public void triggerPosInitialize(String uuid, Integer connectionTimeout, Integer transactionTimeout,
+      Integer settlementTimeout, boolean enableTrace, Promise promise) {
+    executor.execute(new TaskPOSInitialize(uuid, connectionTimeout, transactionTimeout, settlementTimeout, enableTrace,
+        getCurrentActivity(), promise));
   }
 
   @ReactMethod
@@ -53,9 +54,13 @@ public class MagnatiPosIntegrationLibraryModule extends ReactContextBaseJavaModu
     executor.execute(new TaskPOSStopTransactionMode(getCurrentActivity(), promise));
   }
 
-
   @ReactMethod
   public void getTIDMID(Integer timeoutInSec, Promise promise) {
     executor.execute(new PosGetTidMidExecutor(timeoutInSec, getCurrentActivity(), promise));
+  }
+
+  @ReactMethod
+  public void settleBatch(String tid, Promise promise) {
+    executor.execute(new TaskPOSSettleBatch(getCurrentActivity(), tid, promise));
   }
 }
