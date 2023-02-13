@@ -64,3 +64,6 @@ export const getTID_MID = async (
   timeoutInSec: number = 30
 ): Promise<IMagnatiResponse> =>
   MagnatiPosIntegrationLibrary.getTIDMID(timeoutInSec);
+
+export const settleBatch = async (tid: string): Promise<IMagnatiResponse> =>
+  MagnatiPosIntegrationLibrary.settleBatch(tid);

@@ -16,6 +16,7 @@ import {
   stopTransactionMode,
   initializePayment,
   getTID_MID,
+  settleBatch,
 } from 'react-native-magnati-pos';
 
 const sleep = (timeInSec: number) => {
@@ -108,6 +109,21 @@ const App = () => {
     await stopTransactionMode();
   };
 
+  const settle = async () => {
+    console.log('Start');
+    const startRes = await startTransactionMode();
+    if (startRes.success) {
+      await sleep(10);
+      console.log('Settle');
+      const settleResponse = await settleBatch('00283933');
+      console.log(settleResponse);
+    }
+    await sleep(10);
+    console.log('Stop');
+
+    await stopTransactionMode();
+  };
+
   const triggerPayment = async () => {
     let transactionAmount = Number(amount);
     if (transactionAmount > 1) {
@@ -158,6 +174,7 @@ const App = () => {
       />
       <Button title="GET TID MID" onPress={getTidMid} />
       <Button title="Initialize" onPress={initialize} />
+      <Button title="Settle Batch" onPress={settle} />
     </View>
   );
 };
