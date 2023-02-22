@@ -17,6 +17,10 @@ import {
   initializePayment,
   getTID_MID,
   settleBatch,
+  IMagnatiAuthResponse,
+  IMagnatiResponse,
+  IMagnatiSettleResponse,
+  IMagnatiTidMidResponse,
 } from 'react-native-magnati-pos';
 
 const sleep = (timeInSec: number) => {
@@ -30,7 +34,7 @@ const App = () => {
     setLoading(true);
     requestBluetoothPermission();
     requestWritePermission();
-    const initRes = await initializePOS({
+    const initRes: IMagnatiResponse = await initializePOS({
       transactionTimeout: 30,
       uuid: '00001101-0000-1000-8000-00805F9B34FB',
       connectionTimeout: 10,
@@ -96,11 +100,11 @@ const App = () => {
   };
   const getTidMid = async () => {
     console.log('Start');
-    const startRes = await startTransactionMode();
+    const startRes: IMagnatiResponse = await startTransactionMode();
     if (startRes.success) {
       await sleep(10);
       console.log('Get tid');
-      const getTidResponse = await getTID_MID(120);
+      const getTidResponse: IMagnatiTidMidResponse = await getTID_MID(120);
       console.log(getTidResponse);
     }
     await sleep(10);
@@ -111,11 +115,13 @@ const App = () => {
 
   const settle = async () => {
     console.log('Start');
-    const startRes = await startTransactionMode();
+    const startRes: IMagnatiResponse = await startTransactionMode();
     if (startRes.success) {
       await sleep(10);
       console.log('Settle');
-      const settleResponse = await settleBatch('00283933');
+      const settleResponse: IMagnatiSettleResponse = await settleBatch(
+        '00283933'
+      );
       console.log(settleResponse);
     }
     await sleep(10);
@@ -129,11 +135,11 @@ const App = () => {
     if (transactionAmount > 1) {
       setLoading(true);
       console.log('Start');
-      const startRes = await startTransactionMode();
+      const startRes: IMagnatiResponse = await startTransactionMode();
       if (startRes.success) {
         await sleep(10);
         console.log('Get transaction');
-        const paymentResponse = await initializePayment(
+        const paymentResponse: IMagnatiAuthResponse = await initializePayment(
           transactionAmount * 100,
           '00283933',
           '1234',

@@ -3,7 +3,9 @@ import type {
   IInitializeRequest,
   IMagnatiAuthResponse,
   IMagnatiResponse,
-} from './internal/types';
+  IMagnatiSettleResponse,
+  IMagnatiTidMidResponse,
+} from 'react-native-magnati-pos';
 
 const LINKING_ERROR =
   `The package 'react-native-magnati-pos' doesn't seem to be linked. Make sure: \n\n` +
@@ -62,10 +64,12 @@ export const initializePayment = async (
 
 export const getTID_MID = async (
   timeoutInSec: number = 30
-): Promise<IMagnatiResponse> =>
+): Promise<IMagnatiTidMidResponse> =>
   MagnatiPosIntegrationLibrary.getTIDMID(timeoutInSec);
 
-export const settleBatch = async (tid: string): Promise<IMagnatiResponse> =>
+export const settleBatch = async (
+  tid: string
+): Promise<IMagnatiSettleResponse> =>
   MagnatiPosIntegrationLibrary.settleBatch(tid);
 
 const MagnatiPOS = {
